@@ -8,7 +8,6 @@ const nextConfig = {
     unoptimized: true, 
   },
 
-  basePath: '/', // Adjust if your site is served from a subdirectory
 };
 
 export default nextConfig;
