@@ -1,19 +1,39 @@
-import pb from '../lib/pocketbase';
-import LibraryGrid, { LibraryItem } from '../components/LibraryGrid';
+import supabase from '../lib/supabase';
+import SpatialGrid from '../components/SpatialGrid'; // Adjust this import path if needed
 
-export const dynamic = 'force-dynamic';
+// Force Next.js to dynamically render this page so it always shows fresh database items
+export const revalidate = 0;
 
 export default async function Home() {
-  // Fetch data securely on the server
-  const records = await pb.collection('library_items').getFullList<LibraryItem>({
-    sort: '-created',
-    expand: 'tags',
-  });
+  // 1. Fetch data securely on the server using Supabase syntax
+  const { data, error } = await supabase
+    .from('library_items')
+    .select(`
+      *,
+      tags ( id, name )
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Failed to fetch from Supabase:', error);
+  }
+
+  // 2. Translate the PostgreSQL data into the shape your UI expects
+  const mappedItems = (data || []).map((item: any) => ({
+    id: item.id,
+    collectionId: 'supabase-node', // Dummy string to satisfy the old interface
+    title: item.title,
+    category: item.category,
+    cover_image: item.cover_image, // This is now a full, ready-to-use URL string
+    properties: item.properties,
+    expand: {
+      tags: item.tags || []
+    }
+  }));
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Pass the fetched records down to the interactive client component */}
-      <LibraryGrid items={records} />
+    <main>
+      <SpatialGrid items={mappedItems} />
     </main>
   );
 }

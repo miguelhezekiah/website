@@ -21,7 +21,7 @@ export interface LibraryItem {
 }
 
 function getImageUrl(collectionId: string, recordId: string, fileName: string) {
-  return `http://127.0.0.1:8090/api/files/${collectionId}/${recordId}/${fileName}`;
+  return `https://studio-bluprnt-db.pockethost.io/api/files/${collectionId}/${recordId}/${fileName}`;
 }
 
 // --- REUSABLE UI COMPONENTS ---
@@ -208,7 +208,7 @@ export default function LibraryGrid({ items }: { items: LibraryItem[] }) {
             >
               {item.cover_image ? (
                 <Image
-                  src={getImageUrl(item.collectionId, item.id, item.cover_image)} alt={item.title} fill unoptimized
+                  src={item.cover_image} alt={item.title} fill unoptimized
                   className="object-cover opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none"
                 />
               ) : (

@@ -1,6 +1,10 @@
 {
   "app": {
-    "[project]/Documents/DigitalLibraryProject/digital-library-ui/src/app/page": [
+    "[project]/Documents/website/frontend/src/app/page": [
+      "static/media/8800dfc60902df36-s.p.e22d03ab.woff2",
+      "static/media/2f13ad8e538108e0-s.p.9b936cf7.woff2"
+    ],
+    "[project]/Documents/website/frontend/src/app/upload/page": [
       "static/media/8800dfc60902df36-s.p.e22d03ab.woff2",
       "static/media/2f13ad8e538108e0-s.p.9b936cf7.woff2"
     ]
