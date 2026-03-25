@@ -1,39 +1,57 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import supabase from '../lib/supabase';
-import SpatialGrid from '../components/SpatialGrid'; // Adjust this import path if needed
+import SpatialGrid from '../components/SpatialGrid';
 
-// Force Next.js to dynamically render this page so it always shows fresh database items
-export const revalidate = 0;
+export default function Home() {
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function Home() {
-  // 1. Fetch data securely on the server using Supabase syntax
-  const { data, error } = await supabase
-    .from('library_items')
-    .select(`
-      *,
-      tags ( id, name )
-    `)
-    .order('created_at', { ascending: false });
+  useEffect(() => {
+    async function fetchLibrary() {
+      // 1. Fetch live data from Supabase directly from the browser
+      const { data, error } = await supabase
+        .from('library_items')
+        .select(`
+          *,
+          tags ( id, name )
+        `)
+        .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Failed to fetch from Supabase:', error);
-  }
+      if (error) {
+        console.error('Failed to fetch from Supabase:', error);
+      }
 
-  // 2. Translate the PostgreSQL data into the shape your UI expects
-  const mappedItems = (data || []).map((item: any) => ({
-    id: item.id,
-    collectionId: 'supabase-node', // Dummy string to satisfy the old interface
-    title: item.title,
-    category: item.category,
-    cover_image: item.cover_image, // This is now a full, ready-to-use URL string
-    properties: item.properties,
-    expand: {
-      tags: item.tags || []
+      // 2. Map the data for the Spatial Grid
+      const mappedItems = (data || []).map((item: any) => ({
+        id: item.id,
+        collectionId: 'supabase-node',
+        title: item.title,
+        category: item.category,
+        cover_image: item.cover_image,
+        properties: item.properties,
+        expand: {
+          tags: item.tags || []
+        }
+      }));
+
+      setItems(mappedItems);
+      setLoading(false);
     }
-  }));
+
+    fetchLibrary();
+  }, []);
 
   return (
-    <main>
-      <SpatialGrid items={mappedItems} />
+    <main className="min-h-screen bg-neutral-50 text-black">
+      {loading ? (
+        <div className="flex h-screen w-full items-center justify-center font-mono text-sm uppercase tracking-widest text-neutral-400">
+          Initializing Spatial Grid...
+        </div>
+      ) : (
+        <SpatialGrid items={items} />
+      )}
     </main>
   );
 }
