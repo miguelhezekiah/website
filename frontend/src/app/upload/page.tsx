@@ -223,7 +223,7 @@ export default function UploadTemplate() {
                   {dbTags.filter(t => !selectedTagIds.includes(t.id)).map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </select>
               )}
-              <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleTagKeyDown} placeholder="Type new tag & press Enter" className="border border-neutral-300 px-4 py-2 text-sm flex-grow focus:outline-none" />
+              <input type="text" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleTagKeyDown} placeholder="Type new tag & press Enter" className="border border-neutral-300 px-4 py-2 text-sm grow focus:outline-none" />
             </div>
           </div>
 

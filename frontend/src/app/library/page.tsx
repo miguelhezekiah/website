@@ -1,24 +1,18 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense } from 'react';
-import Link from 'next/link';
-import supabase from '../lib/supabase';
-import { Onest, Roboto_Mono } from 'next/font/google';
-import SpatialGrid from '../components/ProjectsContent';
+import { useEffect, useState } from 'react';
+import supabase from '../../lib/supabase';
+import SpatialGrid from '../../components/LibraryContent';
 
-const onest = Onest({ subsets: ['latin'], weight: ['300', '500', '700'] });
-const robotoMono = Roboto_Mono({ subsets: ['latin'], weight: ['300', '500'] });
-
-export default function Projects() {
+export default function Library() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchLibrary() {
       // 1. Fetch live data from Supabase directly from the browser
       const { data, error } = await supabase
-        .from('library_items') // fix
+        .from('library_items')
         .select(`
           *,
           tags ( id, name )
@@ -46,14 +40,14 @@ export default function Projects() {
       setLoading(false);
     }
 
-    fetchProjects();
+    fetchLibrary();
   }, []);
 
   return (
     <main className="min-h-screen bg-neutral-50 text-black">
       {loading ? (
-        <div className="flex h-screen w-full items-center justify-center font-mono text-sm uppercase tracking-widest text-neutral-400">
-          Arranging Projects...
+        <div className="flex h-screen w-full items-center justify-center font-mono text-sm uppercase tracking-widest text-black">
+          Arranging Library...
         </div>
       ) : (
         <SpatialGrid items={items} />
